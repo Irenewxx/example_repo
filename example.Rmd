@@ -1,0 +1,154 @@
+---
+title: "Simple document"
+author: "Irene"
+output: 
+ html_document:
+  toc: true
+  toc_flow: true
+---
+
+toc 和toc-flow可以建立table context，做筆記什麼的很方便，output的部分也可以改成輸出PDF-document or word-document,但是word和PDF不會建立toc_flow，“可能”可以建立toc。然後儘量注意不要在title或者code下面直接寫comment，最好加---把每個section區隔開來比較好
+
+#注意每次寫作業的時候，要建立正確的路徑和檔案名，比如：
+Create a directory with a reasonable name and path (e.g. ~/Documents/School/P8105/Homework_2/)
+
+Put an R Project in the directory
+
+Keep everything related to the analysis – data inputs, scripts / R Markdown files, reports, output – in there, and use R Markdown as much as possible
+
+Periodically check for reproducibility of the analysis
+---
+
+I'm an R Markdown document! 
+
+# Section 0: libraries
+```{r}
+#{r echo=F, message=F, eval=F}
+#echo is for the code chunk if true, the code chunk show up, false then the chunk will not show up.message is for the lack of function, eval can make specific code chunk not running but you will get an error. So be careful in these parts
+library(tidyverse)
+
+```
+
+
+
+
+# Section 1
+
+Here's a **code chunk** that samples from 
+a _normal distribution_:
+
+#當你包含```的時候，code是不會跑的，會報錯
+```{r}
+samp = rnorm(100) #this samples from a normal distribution
+length(samp)
+```
+
+# Section 2
+
+I can take the mean of the sample, too!
+The mean is `r mean(samp)`.
+
+#點擊右上角的綠色C+，就可以開始進行markdown
+# Section 3: a tibble 
+```{r}
+
+plot_df=
+  tibble(
+    x= rnorm(1000,sd=0.5),
+    y=1+2*x + rnorm(1000)
+  ) 
+
+head(plot_df)
+
+
+```
+
+
+# Section 4: plots
+```{r}
+#當你在tool->global option 那裡把R markdown裡面的show output inline取消後，圖會顯示在右側的plot，你可以從這裡下載圖
+ggplot(plot_df, aes(x=x)) + geom_histogram()
+ggplot(plot_df,aes(x=x ,y=y)) + geom_point()
+```
+
+
+
+# Section 5: Learning assignment 2
+Write a named code chunk that creates a dataframe comprised of: a numeric variable containing a random sample of size 500 from a normal variable with mean 1; a logical vector indicating whether each sampled value is greater than zero; and a numeric vector containing the absolute value of each element. Then, produce a histogram of the absolute value variable just created. Add an inline summary giving the median value rounded to two decimal places. What happens if you set eval = FALSE to the code chunk? What about echo = FALSE?
+
+This plot shows the distribution of the absolute value of$x\sim N(1,1)$
+
+```{r}
+#注意每次寫完markdown之後，一定要先反選代碼跑一遍，確認console有跑代碼之後再進行下一步
+la_df = tibble(
+  num_var =rnorm(n=500, mean=1),
+  log_var = num_var>0,
+  abs_var = abs(num_var)
+)
+
+head(la_df)
+#永遠記得，當你希望在console或者markdown中展示結果的時候一定要使用：head（展示前6行）或tail（展示後4行）或者print（會顯示“所有”的數據結果）
+
+
+#這裡記得你的plot要改名字，x軸也變了
+ggplot(la_df, aes(x=abs_var )) + geom_histogram()
+
+
+```
+The median is `r round(median(pull(la_df,num_var )),2)`
+#這裡只是展示bullet point，要確認代碼是否正確的時候，要用+C去開代碼行來跑！
+
+
+# Section 6 (click 上方藍色的knit你可以從網頁版打開，然後也可以upload或者存成html file/就可以用PDF了)
+Text formatting 
+------------------------------------------------------------
+
+*italic*  or  _italic_
+**bold**  or  __bold__
+`code`
+superscript^2^ and subscript~2~
+
+
+Headings
+------------------------------------------------------------
+
+# 1st Level Header
+
+## 2nd Level Header
+
+### 3rd Level Header
+
+
+Lists
+------------------------------------------------------------
+
+*   Bulleted list item 1
+
+*   Item 2
+
+    * Item 2a
+
+    * Item 2b
+
+1.  Numbered list item 1
+
+1.  Item 2. The numbers are incremented automatically in the output.
+
+
+Tables 
+------------------------------------------------------------
+
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
+
+# Section 7: Learning assignment 3
+After the previous code chunk, write a bullet list given the mean, median, and standard deviation of the original random sample
+
+*The median is: `r round(median(pull(la_df,num_var )),2)`
+
+*The mean is:`r round(mean(pull(la_df,num_var )),2)`
+
+*The standard deviation:`r round(sd(pull(la_df,num_var )),2)`
